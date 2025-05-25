@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Chat - 365 Days of Web Development</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content p-8 bg-base-100 min-h-screen flex justify-center items-center">
+            <div class="container mx-auto px-4 w-full max-w-4xl">
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">Admin Support Chat</h2>
+                        <div class="alert alert-info mb-4">
+                            <span class="material-icons mr-2">info</span>
+                            You are viewing all user support chats as an admin
+                        </div>
+                        <div id="chat-container" class="h-96 overflow-y-auto border rounded-lg p-4 mb-4">
+                            {% for chat in chats %}
+                            <div class="chat chat-start mb-2">
+                                <div class="chat-header mb-1">
+                                    {{ chat.user_email }}
+                                    <time class="text-xs opacity-50 ml-1">{{ chat.timestamp }}</time>
+                                </div>
+                                <div class="chat-bubble">{{ chat.message }}</div>
+                            </div>
+                            {% if chat.admin_response %}
+                            <div class="chat chat-end mb-2">
+                                <div class="chat-header mb-1">
+                                    Admin
+                                    <time class="text-xs opacity-50 ml-1">{{ chat.response_timestamp }}</time>
+                                </div>
+                                <div class="chat-bubble chat-bubble-primary">{{ chat.admin_response }}</div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="flex space-x-2">
+                            <select id="user-select" class="select select-bordered w-full max-w-xs">
+                                <option disabled selected>Select user chat</option>
+                                {% for user in users %}
+                                    <option value="{{ user.email }}">{{ user.email }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="text" id="message-input" placeholder="Type your response..." 
+                                   class="input input-bordered w-full">
+                            <button onclick="sendAdminResponse()" class="btn btn-primary">
+                                <span class="material-icons">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'components/_sidebar.html' %}
+    </div>
+    <script>
+        function sendAdminResponse() {
+            const messageInput = document.getElementById('message-input');
+            const userSelect = document.getElementById('user-select');
+            const chatContainer = document.getElementById('chat-container');
+            
+            if (messageInput.value.trim() === '' || userSelect.value === 'Select user chat') return;
+            
+            fetch('/admin/chat/respond', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_email: userSelect.value,
+                    message: messageInput.value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const adminMessageEl = document.createElement('div');
+                    adminMessageEl.classList.add('chat', 'chat-end', 'mb-2');
+                    adminMessageEl.innerHTML = `
+                        <div class="chat-header mb-1">
+                            Admin
+                            <time class="text-xs opacity-50 ml-1">${new Date().toLocaleString()}</time>
+                        </div>
+                        <div class="chat-bubble chat-bubble-primary">
+                            ${messageInput.value}
+                        </div>
+                    `;
+                    
+                    chatContainer.appendChild(adminMessageEl);
+                    messageInput.value = '';
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

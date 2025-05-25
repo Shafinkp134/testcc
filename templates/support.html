@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - 365 Days of Web Development</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content p-8 bg-base-100 min-h-screen flex justify-center items-center">
+            <div class="container mx-auto px-4 w-full max-w-4xl">
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">Support Chat</h2>
+                        <div id="chat-container" class="h-96 overflow-y-auto border rounded-lg p-4 mb-4">
+                            <!-- Chat messages will be dynamically loaded here -->
+                        </div>
+                        <div class="flex space-x-2">
+                            <input type="text" id="message-input" placeholder="Type your message..." 
+                                   class="input input-bordered w-full">
+                            <button onclick="sendMessage()" class="btn btn-primary">
+                                <span class="material-icons">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'components/_sidebar.html' %}
+    </div>
+    <script>
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const chatContainer = document.getElementById('chat-container');
+            
+            if (messageInput.value.trim() === '') return;
+            
+            // Create user message element
+            const userMessageEl = document.createElement('div');
+            userMessageEl.classList.add('chat', 'chat-end', 'mb-2');
+            userMessageEl.innerHTML = `
+                <div class="chat-bubble chat-bubble-primary">
+                    ${messageInput.value}
+                </div>
+            `;
+            
+            chatContainer.appendChild(userMessageEl);
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

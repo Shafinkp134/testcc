@@ -1,0 +1,65 @@
+<div class="mobile-sidebar-toggle fixed top-4 right-4 z-[110] lg:hidden">
+    <label for="my-drawer" class="btn btn-ghost drawer-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+        </svg>
+    </label>
+</div>
+<div class="drawer-side fixed z-[100]">
+    <div class="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
+        <div class="flex items-center mb-8">
+            <img src="{{ config['LOGO_URL'] }}" alt="Logo" class="h-12 w-12 mr-4">
+            <h2 class="text-xl font-bold text-primary">{{ app_title }}</h2>
+        </div>
+        <div class="text-center mb-8">
+            {% if session.get('user', {}).get('photo_url') %}
+                <div class="avatar mr-4">
+                    <div class="w-24 rounded-xl shadow-lg">
+                        <img src="{{ session['user']['photo_url'] }}" alt="Profile Picture" class="object-cover" />
+                    </div>
+                </div>
+            {% else %}
+                <div class="avatar placeholder">
+                    <div class="bg-neutral text-neutral-content rounded-xl w-24 shadow-lg">
+                        <span class="text-3xl">{{ session.get('user', {}).get('display_name', 'U')[0] }}</span>
+                    </div>
+                </div>
+            {% endif %}
+            <h3 class="text-xl font-bold mt-4 text-primary">
+                {{ session.get('user', {}).get('display_name') or session.get('user', {}).get('user_email') }}
+            </h3>
+            <p class="text-sm text-gray-500">User</p>
+        </div>
+        
+        <ul class="menu bg-base-100 w-full rounded-box shadow-lg">
+            <li class="w-full">
+                <a href="{{ url_for('home_route') }}" class="sidebar-menu-item w-full flex items-center py-2 px-4 rounded-lg {% if request.endpoint == 'profile_route' %}bg-primary text-white{% endif %} hover:bg-base-300 transition-colors duration-200">
+                    <span class="material-icons mr-2">home</span> Home
+                </a>
+            </li>
+            <li class="w-full">
+                <a href="{{ url_for('support_route') }}" class="w-full sidebar-menu-item flex items-center py-2 px-4 rounded-lg hover:bg-base-300 transition-colors duration-200">
+                    <span class="material-icons mr-2">support_agent</span> Support
+                </a>
+            </li>
+            <li class="w-full">
+                <a href="#" onclick="openLogoutModal()" class="w-full sidebar-menu-item flex items-center py-2 px-4 rounded-lg hover:bg-base-300 transition-colors duration-200">
+                    <span class="material-icons mr-2">logout</span> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Confirm Logout</h3>
+            <p class="py-4">Are you sure you want to logout?</p>
+            <div class="modal-action">
+                <a href="#" class="btn btn-ghost" onclick="closeLogoutModal()">Cancel</a>
+                <a href="{{ url_for('logout_route') }}" class="btn btn-primary">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

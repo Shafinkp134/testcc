@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Internal Server Error</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="bg-base-100 flex items-center justify-center min-h-screen">
+    <div class="card w-96 bg-base-100 shadow-xl p-6 text-center">
+        <div class="text-6xl text-error mb-4">
+            <i class="material-icons text-8xl">error_outline</i>
+        </div>
+        <h1 class="text-3xl font-bold mb-4">Oops! Something Went Wrong</h1>
+        <p class="mb-6">An unexpected error occurred on your server.</p>
+
+        <div class="bg-base-100 p-4 rounded-lg mb-6 text-left">
+            <h3 class="font-bold mb-2">If you are the developer:</h3>
+            <ol class="list-decimal list-inside text-sm">
+                <li>Check the App logs in the Lazy Builder</li>
+                <li>Look for any buttons that say "Try to Fix this error"</li>
+                <li>Review the error logs for detailed information</li>
+            </ol>
+        </div>
+
+        <div class="flex justify-center space-x-4">
+            <a href="{{ url_for('landing_route') }}" class="btn btn-primary">
+                <i class="material-icons mr-2">home</i>Return to Home
+            </a>
+        </div>
+    </div>
+</body>
+</html>

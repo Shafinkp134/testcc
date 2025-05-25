@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Admins - {{ app_title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content p-8 bg-base-100 min-h-screen">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-3xl font-bold">Manage Admins</h1>
+                    <a href="{{ url_for('admin_dashboard_route') }}" class="btn btn-ghost">
+                        <span class="material-icons">arrow_back</span>
+                        Back to Dashboard
+                    </a>
+                </div>
+                
+                <div class="card bg-base-100 shadow-xl mb-8">
+                    <div class="card-body">
+                        <h2 class="card-title">Add New Admin</h2>
+                        <div class="flex gap-4">
+                            <input type="email" id="new-admin-email" placeholder="Admin Email" 
+                                   class="input input-bordered w-full">
+                            <button onclick="addAdmin()" class="btn btn-primary">
+                                <span class="material-icons">add</span>
+                                Add Admin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admin in admins %}
+                            <tr>
+                                <td>{{ admin.id }}</td>
+                                <td>{{ admin.email }}</td>
+                                <td>
+                                    <button onclick="removeAdmin({{ admin.id }})" class="btn btn-error btn-sm">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% include 'components/_sidebar.html' %}
+    </div>
+    <script>
+        function addAdmin() {
+            const email = document.getElementById('new-admin-email').value;
+            if (!email) return;
+
+            fetch('/admin/manage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        }
+
+        function removeAdmin(adminId) {
+            if (confirm('Are you sure you want to remove this admin?')) {
+                fetch(`/admin/manage/${adminId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+SQLAlchemy
+flask-login
+flask-static-compress
+flask==3.0.1
+gunicorn
+tailwindcss
+werkzeug==3.0.1

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - {{ app_title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content p-8 bg-base-100 min-h-screen">
+            <div class="container mx-auto px-4">
+                <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Users Card -->
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <span class="material-icons">group</span>
+                                Users
+                            </h2>
+                            <p class="text-3xl font-bold">{{ user_count }}</p>
+                            <div class="card-actions justify-end">
+                                <a href="{{ url_for('admin_users_route') }}" class="btn btn-primary btn-sm">
+                                    Manage Users
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Support Chats Card -->
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <span class="material-icons">chat</span>
+                                Support Chats
+                            </h2>
+                            <p class="text-3xl font-bold">{{ chat_count }}</p>
+                            <div class="card-actions justify-end">
+                                <a href="{{ url_for('admin_chat_route') }}" class="btn btn-primary btn-sm">
+                                    View Chats
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admins Card -->
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <span class="material-icons">admin_panel_settings</span>
+                                Admins
+                            </h2>
+                            <p class="text-3xl font-bold">{{ admin_count }}</p>
+                            <div class="card-actions justify-end">
+                                <a href="{{ url_for('admin_manage_route') }}" class="btn btn-primary btn-sm">
+                                    Manage Admins
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'components/_sidebar.html' %}
+    </div>
+</body>
+</html>
